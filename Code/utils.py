@@ -78,3 +78,6 @@ def init_weights(model):
                 m.bias.data.zero_()
             linear_count += 1
     return model
+
+def get_current_lr(optimizer):
+    return optimizer.param_groups[0]['lr']

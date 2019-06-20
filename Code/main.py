@@ -6,7 +6,7 @@ import torch.optim as optim
 from runner import train_model, val_model
 import torchvision.transforms as transforms
 from checkpoint import load_checkpoint, save_checkpoint
-from utils import build_cifar10, parse_args, set_random_seed, init_weights
+from utils import build_cifar10, parse_args, set_random_seed, init_weights, get_current_lr
 
 
 CLASSES = ('plane', 'car', 'bird', 'cat',
@@ -57,6 +57,7 @@ if __name__ == "__main__":
                                                         scheduler=scheduler)
         start_epoch -= 1
         print('Resumed checkpoint {} from {}. Starting at epoch {}.'.format(args.ckpt, args.model_path, start_epoch+1))
+        print('Current learning rate: {}'.format(get_current_lr(optimizer)))
         print('*'*30)
     else:
         start_epoch = 0
