@@ -11,7 +11,6 @@ class Checkpoint():
         self.model = model
         self.optimizer = optimizer
         self.scheduler = scheduler
-        # self.ckpt = ckpt
         self._state = {'epoch': epoch,
                         'model': model,
                         'optimizer': optimizer,

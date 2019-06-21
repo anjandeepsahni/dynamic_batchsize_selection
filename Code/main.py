@@ -7,6 +7,7 @@ from runner import train_model, val_model
 import torchvision.transforms as transforms
 from checkpoint import load_checkpoint, save_checkpoint
 from utils import build_cifar10, parse_args, set_random_seed, init_weights, get_current_lr
+from model import alexnet
 
 
 CLASSES = ('plane', 'car', 'bird', 'cat',
@@ -18,12 +19,6 @@ if __name__ == "__main__":
 
     # set the random seed
     set_random_seed(args.random_seed)
-
-    # transformation for images.
-    transform = transforms.Compose(
-            [transforms.Resize(size=(224,224)),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     print('*'*30)
     print('Setting up dataset...')
@@ -38,7 +33,7 @@ if __name__ == "__main__":
     print('*'*30)
 
     print('Model Architecture')
-    model = torchvision.models.alexnet(pretrained=False)
+    model = torchvision.models.alexnet(pretrained=False, num_classes=len(CLASSES))
     model = model.to(device)
     model_params = sum(p.size()[0] * p.size()[1] if len(p.size()) > 1 else p.size()[0] for p in model.parameters())
     print(model)
@@ -47,7 +42,7 @@ if __name__ == "__main__":
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=3, threshold=0.01, verbose=True)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=3, threshold=0.005, verbose=True)
 
     n_epochs = 200
     if args.resume:
@@ -65,7 +60,7 @@ if __name__ == "__main__":
 
     for epoch in range(start_epoch, n_epochs):
         print('Epoch: %d/%d' % (epoch+1,n_epochs))
-        train_loss = train_model(model, train_loader, criterion, optimizer, device, measure_accuracy=True)
+        train_loss = train_model(model, train_loader, criterion, optimizer, device, measure_accuracy=True, opti_batch=args.opti_batch)
         val_loss, val_acc = val_model(model, test_loader, criterion, device)
         # Checkpoint the model after each epoch.
         save_checkpoint(epoch+1, args.model_path, model=model, optimizer=optimizer, val_metric=val_acc)

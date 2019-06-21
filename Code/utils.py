@@ -17,10 +17,10 @@ DEFAULT_MODEL_PATH = './../Models'
 DEFAULT_DATA_PATH = './../Data'
 DEFAULT_CKPT = 'model_20190618-180049_e100_val_82.262.pt'
 DEFAULT_RANDOM_SEED = 2222
-DEFAULT_TRANSFORMS = transforms.Compose([transforms.Resize(size=(224,224)),
-                                        transforms.ToTensor(),
-                                        transforms.Normalize((0.5, 0.5, 0.5),
-                                                            (0.5, 0.5, 0.5))])
+DEFAULT_TRANSFORMS = transforms.Compose([
+                        transforms.Resize(size=(224,224)),
+                        transforms.ToTensor(),
+                        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 def build_cifar10(root='./data', transform=DEFAULT_TRANSFORMS, batch_size=4, num_workers=2):
     trainset = torchvision.datasets.CIFAR10(root=root, train=True,
@@ -46,6 +46,7 @@ def parse_args():
     parser.add_argument('--random_seed', default=DEFAULT_RANDOM_SEED, type=int, help='random seed')
     parser.add_argument('--weight_decay', default=DEFAULT_WEIGHT_DECAY, type=int, help='weight decay')
     parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
+    parser.add_argument('--opti_batch', action='store_true', help='use optimal batch approach')
     args = parser.parse_args()
     return args
 
@@ -81,3 +82,7 @@ def init_weights(model):
 
 def get_current_lr(optimizer):
     return optimizer.param_groups[0]['lr']
+
+def set_current_lr(optimizer, lr):
+    optimizer.state_dict()['param_groups'][0]['lr'] = lr
+    return optimizer
