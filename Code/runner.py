@@ -27,7 +27,8 @@ def opti_batch_processing(model, criterion, data, target):
         l_list.append(l_sublist)
         l_val_list.append(curr_loss/len(l_sublist))
         o_list.append(torch.cat(o_sublist))
-    best_batch_idx = l_val_list.index(min(l_val_list))
+    best_batch_idx = l_val_list.index(min(l_val_list))    # pick min loss
+    # best_batch_idx = l_val_list.index(max(l_val_list))      # pick max loss
     best_loss = l_val_list[best_batch_idx]
     losses = l_list[best_batch_idx]
     outputs = o_list[best_batch_idx]

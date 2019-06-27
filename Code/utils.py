@@ -10,7 +10,7 @@ import torchvision.transforms as transforms
 import torch.nn.functional as F
 
 DEFAULT_WEIGHT_DECAY = 0.0005
-DEFAULT_LEARNING_RATE = 0.001
+DEFAULT_LEARNING_RATE = 0.01
 DEFAULT_BATCH_SIZE = 256
 DEFAULT_NUM_WORKERS = 2
 DEFAULT_MODEL_PATH = './../Models'
@@ -47,6 +47,9 @@ def parse_args():
     parser.add_argument('--weight_decay', default=DEFAULT_WEIGHT_DECAY, type=int, help='weight decay')
     parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
     parser.add_argument('--opti_batch', action='store_true', help='use optimal batch approach')
+    parser.add_argument('--fixed_lr_decay', action='store_true', help='use fixed learning rate decay')
+    parser.add_argument('--lr_decay_epochs', type=int, nargs='+', default={27,31,35,39,43},
+                        help='epochs after which lr will be decayed')
     args = parser.parse_args()
     return args
 
@@ -84,5 +87,6 @@ def get_current_lr(optimizer):
     return optimizer.param_groups[0]['lr']
 
 def set_current_lr(optimizer, lr):
-    optimizer.state_dict()['param_groups'][0]['lr'] = lr
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
     return optimizer

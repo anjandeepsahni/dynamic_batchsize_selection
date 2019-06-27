@@ -6,9 +6,7 @@ import torch.optim as optim
 from runner import train_model, val_model
 import torchvision.transforms as transforms
 from checkpoint import load_checkpoint, save_checkpoint
-from utils import build_cifar10, parse_args, set_random_seed, init_weights, get_current_lr
-from model import alexnet
-
+from utils import build_cifar10, parse_args, set_random_seed, init_weights, get_current_lr, set_current_lr
 
 CLASSES = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
@@ -16,6 +14,7 @@ CLASSES = ('plane', 'car', 'bird', 'cat',
 if __name__ == "__main__":
 
     args = parse_args()
+    print('Arguments:', args)
 
     # set the random seed
     set_random_seed(args.random_seed)
@@ -64,5 +63,11 @@ if __name__ == "__main__":
         val_loss, val_acc = val_model(model, test_loader, criterion, device)
         # Checkpoint the model after each epoch.
         save_checkpoint(epoch+1, args.model_path, model=model, optimizer=optimizer, val_metric=val_acc)
-        scheduler.step(val_loss)
+        if args.fixed_lr_decay:
+            if epoch in args.lr_decay_epochs:
+                cur_lr = get_current_lr(optimizer)
+                optimizer = set_current_lr(optimizer, cur_lr*0.1)
+                print('Epoch    %d: reducing learning rate of group 0 to %f' % (epoch, cur_lr*0.1))
+        else:
+            scheduler.step(val_loss)
         print('='*20)
