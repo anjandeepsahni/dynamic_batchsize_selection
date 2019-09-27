@@ -23,12 +23,23 @@ The experiment is described below:
     - For batch size 128, learning rate is halved.
     - For batch size 64, learning rate is scaled to 1/4th.
 
+## Model and Dataset
+This experiment was conducted using AlexNet classification model as defined in PyTorch. Image classification was done on CIFAR-10 dataset.
+
 ## Results
 Below are the accuracy and loss curves for the experiment.
-![Result - MinLoss](Plots/Plot_3.jpg)
-![Result - MinAcc](Plots/Plot_4.jpg)
-![Result - MaxLoss](Plots/Plot_7.jpg)
-![Result - MaxAcc](Plots/Plot_8.jpg)
+<p align="center">
+  <img src="Plots/Plot_3.jpg" width="500" title="Result - MinLoss">
+</p>
+<p align="center">
+  <img src="Plots/Plot_4.jpg" width="500" title="Result - MinAcc">
+</p>
+<p align="center">
+  <img src="Plots/Plot_7.jpg" width="500" title="Result - MaxLoss">
+</p>
+<p align="center">
+  <img src="Plots/Plot_8.jpg" width="500" title="Result - MaxAcc">
+</p>
 
 ## Inference
 As evident from the plots above, online selection of batch size performs poorly as compared to using fixed batch size during training. This is true for both maximum loss and minimum loss selection criteria.
