@@ -42,4 +42,4 @@ Below are the accuracy and loss curves for the experiment.
 </p>
 
 ## Inference
-As evident from the plots above, online selection of batch size performs poorly as compared to using fixed batch size during training. This is true for both maximum loss and minimum loss selection criteria.
+As evident from the plots above, online selection of batch size performs equivalently or slightly poorly as compared to using fixed batch size during training. This is true for both maximum loss and minimum loss selection criteria.
